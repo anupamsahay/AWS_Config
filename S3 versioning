@@ -1,0 +1,17 @@
+SELECT
+  resourceId,
+  resourceName,
+  awsRegion,
+  configuration,
+  supplementaryConfiguration,
+  JSON_EXTRACT(configuration, '$.BucketVersioningConfiguration.status'),
+  JSON_EXTRACT(supplementaryConfiguration, '$.BucketLifecycleConfiguration'),
+  tags,
+  arn,
+  accountId
+WHERE
+  resourceType = 'AWS::S3::Bucket'
+  AND (
+    JSON_EXTRACT(configuration, '$.BucketVersioningConfiguration.status') = 'Enabled'
+    OR JSON_EXTRACT(supplementaryConfiguration, '$.BucketLifecycleConfiguration') LIKE '%INTELLIGENT_TIERING%'
+  )
